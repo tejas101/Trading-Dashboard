@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Jump Trading Coding Challenge</title>
+  </head>
+  <body>
+    <div style="font-family: monospace; font-size:large">
+      <h4>Question #4</h4>
+      You are supplied trade data in the following format:<br><br>
+      trade_id, timestamp, symbol, quantity, price, is_buy, trader<br><br>
+      Each line in the data represents a trade.<br><br>
+      The task is to accomplish the following:
+      <ol>
+        <li>Render the data in a table.</li>
+        <li>Allow the user to sort the table by any of the fields.</li>
+        <li>
+          For each trader, show statistics:
+          <ul>
+            <li>Total # of trades</li>
+            <li>
+              Total position per symbol (how many shares of each stock does the trader have).
+              <ul>
+                <li>You can assume a position of zero for each symbol at the start of the day.</li>
+              </ul>
+            </li>
+            <li>Average buy price per symbol</li>
+            <li>Average sell price per symbol</li>
+          </ul>
+        </li>
+        <li>Show the trades for each symbol in a chart.
+          <ul>
+            <li>Either show all symbols in a single chart, or allow the user to select which symbol to view</li>
+          </ul>
+        </li>
+        <li>Bonus: Allow the user to edit the trader field.
+          <ul>
+            <li>For example, reassign a trade from LISA to RACHEL.</li>
+            <li>This change should be reflected in the statistics.</li>
+          </ul>
+      </ol>
+      For your solution, you are free to use whatever libraries or APIs you see fit.<br><br>
+      Please place your solution (along with any additional files/folders you need) in a .zip file (YOURNAME.zip, for example), and
+      attach it in your emailed response.
+    </div>
+    <script>
+      const data = [
+        "1, 1571326165, AAPL, 1, 235.48, 0, LISA", "2, 1571326847, GOOG, 1, 1256.96, 0, LISA",
+        "3, 1571327526, NFLX, 2, 291.79, 1, LISA", "4, 1571327916, AMZN, 2, 1786.38, 1, MARY",
+        "5, 1571328024, NFLX, 1, 291.82, 1, RACHEL", "6, 1571328977, AAPL, 1, 235.47, 1, MARY",
+        "7, 1571329752, GOOG, 2, 1256.97, 0, RACHEL", "8, 1571330674, TSLA, 2, 261.60, 0, RACHEL",
+        "9, 1571331125, GOOG, 3, 1256.98, 0, SUZAN", "10, 1571331400, NFLX, 3, 291.83, 1, SUZAN",
+        "11, 1571331825, NFLX, 4, 291.80, 0, SUZAN", "12, 1571331890, TSLA, 1, 261.62, 0, RACHEL",
+        "13, 1571332094, TSLA, 3, 261.61, 1, LISA", "14, 1571332391, AAPL, 1, 235.49, 0, RACHEL",
+        "15, 1571332701, NFLX, 1, 291.82, 1, MARY", "16, 1571332779, TSLA, 2, 261.60, 1, SUZAN",
+        "17, 1571333296, AAPL, 2, 235.47, 0, MARY", "18, 1571333396, AMZN, 3, 1786.40, 0, SUZAN",
+        "19, 1571333772, AAPL, 3, 235.49, 1, SUZAN", "20, 1571334719, AMZN, 2, 1786.41, 0, MARY",
+        "21, 1571335393, AAPL, 5, 235.50, 1, MARY", "22, 1571335986, TSLA, 1, 261.59, 1, RACHEL",
+        "23, 1571336051, GOOG, 1, 1256.95, 1, RACHEL", "24, 1571336079, GOOG, 2, 1256.92, 1, MARY",
+        "25, 1571336919, TSLA, 2, 261.62, 1, RACHEL", "26, 1571337027, TSLA, 3, 261.59, 0, SUZAN",
+        "27, 1571337692, TSLA, 1, 261.60, 0, SUZAN", "28, 1571338370, AMZN, 4, 1786.43, 0, SUZAN",
+        "29, 1571339315, TSLA, 1, 261.58, 1, LISA", "30, 1571339684, AMZN, 1, 1786.41, 1, MARY",
+        "31, 1571340121, NFLX, 1, 291.79, 1, MARY", "32, 1571340329, TSLA, 1, 261.59, 0, SUZAN",
+        "33, 1571340881, GOOG, 4, 1256.94, 1, SUZAN", "34, 1571341614, AAPL, 1, 235.49, 1, SUZAN",
+        "35, 1571342365, TSLA, 2, 261.60, 0, MARY", "36, 1571343223, NFLX, 2, 291.78, 1, SUZAN",
+        "37, 1571344088, NFLX, 6, 291.81, 1, LISA", "38, 1571344157, TSLA, 5, 261.62, 1, LISA",
+        "39, 1571344808, GOOG, 5, 1256.91, 1, LISA", "40, 1571345251, TSLA, 2, 261.63, 1, SUZAN",
+        "41, 1571345941, NFLX, 2, 291.82, 0, SUZAN", "42, 1571346726, NFLX, 6, 291.85, 1, MARY",
+        "43, 1571347333, AAPL, 1, 235.51, 0, MARY", "44, 1571347930, NFLX, 1, 291.87, 0, SUZAN",
+        "45, 1571348596, AAPL, 2, 235.54, 0, RACHEL", "46, 1571349508, GOOG, 2, 1256.88, 0, MARY",
+        "47, 1571349552, AAPL, 6, 235.53, 1, SUZAN", "48, 1571349692, AAPL, 3, 235.52, 1, RACHEL",
+        "49, 1571350245, TSLA, 1, 261.60, 0, MARY", "50, 1571350352, TSLA, 1, 261.62, 0, MARY",
+        "51, 1571350838, NFLX, 1, 291.85, 1, SUZAN", "52, 1571350937, AAPL, 1, 235.50, 0, SUZAN",
+        "53, 1571351321, AMZN, 3, 1786.40, 1, MARY", "54, 1571351862, GOOG, 1, 1256.85, 1, LISA",
+        "55, 1571352614, AAPL, 3, 235.47, 1, RACHEL", "56, 1571353475, AAPL, 3, 235.49, 1, LISA",
+        "57, 1571353578, NFLX, 7, 291.88, 0, LISA", "58, 1571354031, AAPL, 2, 235.51, 1, RACHEL",
+        "59, 1571354533, TSLA, 4, 261.59, 1, SUZAN", "60, 1571355496, NFLX, 1, 291.86, 0, LISA",
+        "61, 1571356184, GOOG, 3, 1256.87, 1, SUZAN", "62, 1571356519, TSLA, 3, 261.62, 1, RACHEL",
+        "63, 1571357023, TSLA, 1, 261.65, 0, SUZAN", "64, 1571357371, GOOG, 4, 1256.86, 0, LISA",
+        "65, 1571357975, AAPL, 5, 235.52, 0, LISA", "66, 1571358422, GOOG, 2, 1256.89, 1, MARY",
+        "67, 1571358636, TSLA, 2, 261.64, 1, LISA", "68, 1571359027, NFLX, 1, 291.89, 1, SUZAN",
+        "69, 1571359297, NFLX, 2, 291.92, 0, LISA", "70, 1571359960, AMZN, 1, 1786.41, 1, RACHEL",
+        "71, 1571360018, AMZN, 5, 1786.39, 1, MARY", "72, 1571360796, TSLA, 2, 261.62, 0, LISA",
+        "73, 1571361510, TSLA, 3, 261.63, 0, RACHEL", "74, 1571362437, AAPL, 1, 235.54, 1, LISA",
+        "75, 1571362832, TSLA, 1, 261.65, 0, MARY", "76, 1571363124, AAPL, 2, 235.51, 0, SUZAN",
+        "77, 1571363353, AMZN, 1, 1786.41, 0, LISA", "78, 1571363644, TSLA, 3, 261.68, 0, SUZAN",
+        "79, 1571364547, GOOG, 3, 1256.92, 0, LISA", "80, 1571364615, NFLX, 4, 291.90, 1, RACHEL",
+        "81, 1571365064, AMZN, 2, 1786.42, 1, RACHEL", "82, 1571365529, GOOG, 2, 1256.91, 0, RACHEL",
+        "83, 1571365797, NFLX, 1, 291.88, 0, RACHEL", "84, 1571366296, TSLA, 1, 261.67, 1, MARY",
+        "85, 1571366298, AMZN, 6, 1786.40, 1, LISA", "86, 1571366886, AMZN, 2, 1786.39, 0, SUZAN",
+        "87, 1571366971, TSLA, 2, 261.66, 1, MARY", "88, 1571367623, TSLA, 1, 261.69, 1, LISA",
+        "89, 1571368345, GOOG, 1, 1256.88, 1, MARY", "90, 1571369280, TSLA, 1, 261.70, 0, LISA",
+        "91, 1571370028, AAPL, 3, 235.52, 1, LISA", "92, 1571370873, AAPL, 3, 235.51, 1, LISA",
+        "93, 1571371851, NFLX, 5, 291.85, 0, MARY", "94, 1571372371, AAPL, 2, 235.52, 0, LISA",
+        "95, 1571372458, NFLX, 1, 291.86, 1, SUZAN", "96, 1571372466, AMZN, 1, 1786.40, 0, LISA",
+        "97, 1571372570, AAPL, 1, 235.53, 1, RACHEL", "98, 1571372993, AMZN, 1, 1786.42, 1, MARY",
+        "99, 1571373205, NFLX, 1, 291.85, 0, MARY", "100, 1571374106, AAPL, 1, 235.54, 1, RACHEL"
+      ];
+
+      // YOUR CODE HERE!
+    </script>
+  </body>
+</html>
